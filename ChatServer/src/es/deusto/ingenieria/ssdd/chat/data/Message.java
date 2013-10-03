@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Message {
+	//jdjdjd
 	private long timestamp;
 	private String text;
 	private User from;
