@@ -13,27 +13,36 @@ public class Message {
 	private static final int CLIENT_MESSAGE_CLOSE_CONVERSATION=105;
 	private static final int CLIENT_MESSAGE_CLOSE_CONNECTION=106;
 	private static final int CLIENT_MESSAGE_GET_USERS=107;
-	private static final int CLIENT_MESSAGE=107;
+	private static final int CLIENT_MESSAGE=108;
 	
 	//Server message types
 	private static final int SERVER_MESSAGE_CONNECTED=201;
-	private static final int SERVER_MESSAGE_INVITATTION=201;
-	private static final int SERVER_MESSAGE_INVITATTION_ACCEPTED=201;
-	private static final int SERVER_MESSAGE_INVITATTION_REJECTED=201;
-	private static final int SERVER_MESSAGE_CONVERSATION_CLOSED=201;
-	private static final int SERVER_MESSAGE_DISCONNECTED=201;
-	private static final int SERVER_MESSAGE_LIST_OF_USERS=201;
-	private static final int SERVER_MESSAGE=201;
+	private static final int SERVER_MESSAGE_INVITATTION=202;
+	private static final int SERVER_MESSAGE_INVITATTION_ACCEPTED=203;
+	private static final int SERVER_MESSAGE_INVITATTION_REJECTED=204;
+	private static final int SERVER_MESSAGE_CONVERSATION_CLOSED=205;
+	private static final int SERVER_MESSAGE_DISCONNECTED=206;
+	private static final int SERVER_MESSAGE_LIST_OF_USERS=207;
+	private static final int SERVER_MESSAGE=208;
 	
 	//ERROR MESSAGES
 	private static final int ERROR_MESSAGE_EXISTING_NICK=301;
-	private static final int ERROR_MESSAGE_CONNECTION_FAILED=301;
-	private static final int ERROR_MESSAGE_USER_ALREADY_CHATTING=301;
-	private static final int ERROR_MESSAGE_USER_IS_DISCONNECTED=301;
+	private static final int ERROR_MESSAGE_CONNECTION_FAILED=302;
+	private static final int ERROR_MESSAGE_USER_ALREADY_CHATTING=303;
+	private static final int ERROR_MESSAGE_USER_IS_DISCONNECTED=304;
+	private static final int ERROR_MESSAGE_MESSAGE_ERROR=305;
 	
+	//MESSAGES WITH DESTINATION NICK AS SECON PARAMETER
+	private static int[]MESSAGES_WITH_DESTINATION={CLIENT_MESSAGE_ESTABLISH_CONNECTION,CLIENT_MESSAGE_ACCEPT_INVITATION,CLIENT_MESSAGE_REJECT_INVITATION,CLIENT_MESSAGE};
 	
 	
 	private long timestamp;
+	public int getMessageType() {
+		return messageType;
+	}
+	public void setMessageType(int messageType) {
+		this.messageType = messageType;
+	}
 	private String text;
 	private int messageType;
 	private User from;
@@ -93,5 +102,11 @@ public class Message {
 		return "[" + dateFormatter.format(new Date(this.timestamp)) + "] '" + 
 	           this.from + " -> " + this.to + " : " + this.text; 
 				
+	}
+	public static boolean hasDestination(int code){
+		for(int i:Message.MESSAGES_WITH_DESTINATION){
+			if(i==code)return true;
+		}
+		return false;
 	}
 }
