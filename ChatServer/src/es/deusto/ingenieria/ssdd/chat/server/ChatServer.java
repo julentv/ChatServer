@@ -34,6 +34,7 @@ public class ChatServer {
 				udpSocket.receive(request);
 				System.out.println(" - Received a request from '" + request.getAddress().getHostAddress() + ":" + request.getPort() + 
 		                   "' -> " + new String(request.getData()));
+				//procesar el mensaje en nuevo hilo con Message Processor
 			}
 			
 		} catch (SocketException e) {

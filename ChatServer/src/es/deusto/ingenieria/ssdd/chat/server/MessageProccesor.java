@@ -21,11 +21,11 @@ public class MessageProccesor implements Runnable {
 
 	@Override
 	public void run() {
-		
+		//controlar errores aqui (mensaje desconocido y tal)
+		generateMessage();
+		//reaccion al mensaje aqui
 
 	}
-	//controlar errores al llamar a este metodo
-	//lanzar error de mensaje desconocido
 	private void generateMessage(){
 		
 		//obtain all the params from the datagram data
