@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.util.ArrayList;
 
 import es.deusto.ingenieria.ssdd.chat.data.Message;
+import es.deusto.ingenieria.ssdd.chat.data.User;
 
 public class MessageProccesor implements Runnable {
 
@@ -20,7 +21,14 @@ public class MessageProccesor implements Runnable {
 
 	@Override
 	public void run() {
+		
 
+	}
+	private void generateMessage(){
+		String ip=messageToProcces.getAddress().getHostAddress();
+		User user=userList.getUserByIp(ip);
+		
+		
 	}
 
 }
