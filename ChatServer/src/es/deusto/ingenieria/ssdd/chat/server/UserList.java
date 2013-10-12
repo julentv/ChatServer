@@ -33,5 +33,17 @@ public class UserList {
 		}
 		return null;
 	}
+	
+	/**
+	 * Format of the string: &nick0&nick1&..nickn
+	 * returns empty string if there are not Users in the list
+	 */
+	public String toString (){
+		String listOfNicks="";
+		for (User u:this.listOfUsers){
+			listOfNicks=listOfNicks+'&'+u.getNick();
+		}
+		return listOfNicks;
+	}
 
 }

@@ -6,31 +6,31 @@ import java.util.Date;
 
 public class Message {
 	//Client message types
-	private static final int CLIENT_MESSAGE_LOGIN=101;
-	private static final int CLIENT_MESSAGE_ESTABLISH_CONNECTION=102;
-	private static final int CLIENT_MESSAGE_ACCEPT_INVITATION=103;
-	private static final int CLIENT_MESSAGE_REJECT_INVITATION=104;
-	private static final int CLIENT_MESSAGE_CLOSE_CONVERSATION=105;
-	private static final int CLIENT_MESSAGE_CLOSE_CONNECTION=106;
-	private static final int CLIENT_MESSAGE_GET_USERS=107;
-	private static final int CLIENT_MESSAGE=108;
+	public static final int CLIENT_MESSAGE_LOGIN=101;
+	public static final int CLIENT_MESSAGE_ESTABLISH_CONNECTION=102;
+	public static final int CLIENT_MESSAGE_ACCEPT_INVITATION=103;
+	public static final int CLIENT_MESSAGE_REJECT_INVITATION=104;
+	public static final int CLIENT_MESSAGE_CLOSE_CONVERSATION=105;
+	public static final int CLIENT_MESSAGE_CLOSE_CONNECTION=106;
+	public static final int CLIENT_MESSAGE_GET_USERS=107;
+	public static final int CLIENT_MESSAGE=108;
 	
 	//Server message types
-	private static final int SERVER_MESSAGE_CONNECTED=201;
-	private static final int SERVER_MESSAGE_INVITATTION=202;
-	private static final int SERVER_MESSAGE_INVITATTION_ACCEPTED=203;
-	private static final int SERVER_MESSAGE_INVITATTION_REJECTED=204;
-	private static final int SERVER_MESSAGE_CONVERSATION_CLOSED=205;
-	private static final int SERVER_MESSAGE_DISCONNECTED=206;
-	private static final int SERVER_MESSAGE_LIST_OF_USERS=207;
-	private static final int SERVER_MESSAGE=208;
+	public static final int SERVER_MESSAGE_CONNECTED=201;
+	public static final int SERVER_MESSAGE_INVITATTION=202;
+	public static final int SERVER_MESSAGE_INVITATTION_ACCEPTED=203;
+	public static final int SERVER_MESSAGE_INVITATTION_REJECTED=204;
+	public static final int SERVER_MESSAGE_CONVERSATION_CLOSED=205;
+	public static final int SERVER_MESSAGE_DISCONNECTED=206;
+	public static final int SERVER_MESSAGE_LIST_OF_USERS=207;
+	public static final int SERVER_MESSAGE=208;
 	
 	//ERROR MESSAGES
-	private static final int ERROR_MESSAGE_EXISTING_NICK=301;
-	private static final int ERROR_MESSAGE_CONNECTION_FAILED=302;
-	private static final int ERROR_MESSAGE_USER_ALREADY_CHATTING=303;
-	private static final int ERROR_MESSAGE_USER_IS_DISCONNECTED=304;
-	private static final int ERROR_MESSAGE_MESSAGE_ERROR=305;
+	public static final int ERROR_MESSAGE_EXISTING_NICK=301;
+	public static final int ERROR_MESSAGE_CONNECTION_FAILED=302;
+	public static final int ERROR_MESSAGE_USER_ALREADY_CHATTING=303;
+	public static final int ERROR_MESSAGE_USER_IS_DISCONNECTED=304;
+	public static final int ERROR_MESSAGE_MESSAGE_ERROR=305;
 	
 	//MESSAGES WITH DESTINATION NICK AS SECON PARAMETER
 	private static int[]MESSAGES_WITH_DESTINATION={CLIENT_MESSAGE_ESTABLISH_CONNECTION,CLIENT_MESSAGE_ACCEPT_INVITATION,CLIENT_MESSAGE_REJECT_INVITATION,CLIENT_MESSAGE};
