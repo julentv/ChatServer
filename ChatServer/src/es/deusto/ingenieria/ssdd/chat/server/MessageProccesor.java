@@ -62,10 +62,7 @@ public class MessageProccesor implements Runnable {
 				userTo=userList.getUserByNick(nickTo);
 				if(userTo!=null){
 					content=content.substring(nickTo.length());
-				}else{
-					throw new IncorrectMessageException();
 				}
-				
 			}catch(RuntimeException e){
 				throw new IncorrectMessageException("Incorrect message. No destination user found");
 			}
@@ -86,6 +83,9 @@ public class MessageProccesor implements Runnable {
 		switch (message.getMessageType()){
 		case Message.CLIENT_MESSAGE_LOGIN:
 			this.loginMessageTreatment();
+			break;
+		case Message.CLIENT_MESSAGE_ESTABLISH_CONNECTION:
+			this.establishConnectionTreatment();
 			break;
 		default: throw new IncorrectMessageException("The message type code does not exist");
 		}
@@ -109,8 +109,18 @@ public class MessageProccesor implements Runnable {
 				sendDatagram(message.getFrom(),response);
 			}
 		}else{
-			
 			throw new IncorrectMessageException("The Login message is not correct: '"+content.toString()+"'");
+		}
+	}
+	private void establishConnectionTreatment(){
+		User to=message.getTo();
+		if(to!=null){
+			String response=new Integer(Message.SERVER_MESSAGE_INVITATTION).toString()+this.message.getFrom().getNick();
+			this.sendDatagram(this.message.getTo(), response);
+		}else{
+			//User disconnected
+			String response=new Integer(Message.ERROR_MESSAGE_USER_IS_DISCONNECTED).toString()+this.userList.toString();
+			this.sendDatagram(this.message.getFrom(), response);
 		}
 	}
 	private void sendDatagram(User destinationUser, String message){
