@@ -33,8 +33,8 @@ public class Message {
 	public static final int ERROR_MESSAGE_MESSAGE_ERROR=305;
 	
 	//Messages that are received by the server and this only responds with a simple message
-	public static int[]CROSS_MESSAGES={CLIENT_MESSAGE_ESTABLISH_CONNECTION,CLIENT_MESSAGE_ACCEPT_INVITATION,CLIENT_MESSAGE_REJECT_INVITATION,CLIENT_MESSAGE_CLOSE_CONVERSATION};
-	private static int[]RESPONSES_TO_CROSS_MESSAGES={SERVER_MESSAGE_INVITATTION,SERVER_MESSAGE_INVITATTION_ACCEPTED,SERVER_MESSAGE_INVITATTION_REJECTED,SERVER_MESSAGE_CONVERSATION_CLOSED};
+	public static int[]CROSS_MESSAGES={CLIENT_MESSAGE_ESTABLISH_CONNECTION,CLIENT_MESSAGE_ACCEPT_INVITATION,CLIENT_MESSAGE_REJECT_INVITATION,CLIENT_MESSAGE_CLOSE_CONVERSATION,CLIENT_MESSAGE};
+	private static int[]RESPONSES_TO_CROSS_MESSAGES={SERVER_MESSAGE_INVITATTION,SERVER_MESSAGE_INVITATTION_ACCEPTED,SERVER_MESSAGE_INVITATTION_REJECTED,SERVER_MESSAGE_CONVERSATION_CLOSED, SERVER_MESSAGE};
 	
 	private long timestamp;
 	public int getMessageType() {
@@ -130,6 +130,8 @@ public class Message {
 				if(i==this.messageType){
 					if(i==Message.CROSS_MESSAGES[0]){
 						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick();
+					}else if(i==Message.CLIENT_MESSAGE){
+						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick()+'&'+this.text;
 					}else{
 						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString();
 					}
