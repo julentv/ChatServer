@@ -32,9 +32,9 @@ public class Message {
 	public static final int ERROR_MESSAGE_USER_IS_DISCONNECTED=304;
 	public static final int ERROR_MESSAGE_MESSAGE_ERROR=305;
 	
-	//MESSAGES WITH DESTINATION NICK AS SECON PARAMETER
-	private static int[]MESSAGES_WITH_DESTINATION={CLIENT_MESSAGE_ESTABLISH_CONNECTION,CLIENT_MESSAGE_ACCEPT_INVITATION,CLIENT_MESSAGE_REJECT_INVITATION,CLIENT_MESSAGE};
-	
+	//Messages that are received by the server and this only responds with a simple message
+	public static int[]CROSS_MESSAGES={CLIENT_MESSAGE_ESTABLISH_CONNECTION,CLIENT_MESSAGE_ACCEPT_INVITATION,CLIENT_MESSAGE_REJECT_INVITATION,CLIENT_MESSAGE_CLOSE_CONVERSATION};
+	private static int[]RESPONSES_TO_CROSS_MESSAGES={SERVER_MESSAGE_INVITATTION,SERVER_MESSAGE_INVITATTION_ACCEPTED,SERVER_MESSAGE_INVITATTION_REJECTED,SERVER_MESSAGE_CONVERSATION_CLOSED};
 	
 	private long timestamp;
 	public int getMessageType() {
@@ -104,9 +104,40 @@ public class Message {
 				
 	}
 	public static boolean hasDestination(int code){
-		for(int i:Message.MESSAGES_WITH_DESTINATION){
+		if(code==Message.CLIENT_MESSAGE){
+			return true;
+		}
+		for(int i:Message.CROSS_MESSAGES){
 			if(i==code)return true;
 		}
+		
 		return false;
+	}
+	public boolean isCrossMessage(){
+		for(int i:Message.CROSS_MESSAGES){
+			if(i==this.messageType)return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * For the cross messages, returns the message type of the correct response to make.
+	 * @return 0 if no response found or the number type if found
+	 */
+	public String getSimpleResponse(){
+		if(this.to!=null){
+			for(int i:Message.CROSS_MESSAGES){
+				if(i==this.messageType){
+					if(i==Message.CROSS_MESSAGES[0]){
+						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick();
+					}else{
+						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString();
+					}
+					
+					
+				}
+			}
+		}
+		return null;
 	}
 }

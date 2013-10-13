@@ -47,9 +47,9 @@ public class MessageProccesor implements Runnable {
 		User userTo=userList.getUserByIp(ip);
 		String content=new String(messageToProcces.getData());
 		int id=Integer.parseInt(content.substring(0, 3));
-		if(content.length()>3){
+		if(content.length()>4){
 			//also eliminate the first &
-			content=content.substring(3);	
+			content=content.substring(4);	
 		}else{
 			content=null;
 		}
@@ -58,10 +58,11 @@ public class MessageProccesor implements Runnable {
 		//obtain the destination user if the message should have it
 		if(Message.hasDestination(id)){
 			try{
-				String nickTo=content.split("&")[0];
+				String[] splited=content.split("&");
+				String nickTo=splited[0];
 				userTo=userList.getUserByNick(nickTo);
-				if(userTo!=null){
-					content=content.substring(nickTo.length());
+				if(splited.length>1){
+					content=content.substring(nickTo.length()+1);
 				}
 			}catch(RuntimeException e){
 				throw new IncorrectMessageException("Incorrect message. No destination user found");
@@ -79,22 +80,21 @@ public class MessageProccesor implements Runnable {
 	 * @throws IncorrectMessageException
 	 */
 	private void treatMessage() throws IncorrectMessageException{
-		
-		switch (message.getMessageType()){
-		case Message.CLIENT_MESSAGE_LOGIN:
-			this.loginMessageTreatment();
-			break;
-		case Message.CLIENT_MESSAGE_ESTABLISH_CONNECTION:
-			this.establishConnectionTreatment();
-			break;
-		default: throw new IncorrectMessageException("The message type code does not exist");
-		}
+		if(message.isCrossMessage()){
 			
+		}else{
+		switch (message.getMessageType()){
+			case Message.CLIENT_MESSAGE_LOGIN:
+				this.loginMessageTreatment();
+				break;
+			default: throw new IncorrectMessageException("The message type code does not exist");
+			}
+		}
 	}
 	
 	
 	//Methods for the treatment of the different message types
-	
+
 	private void loginMessageTreatment() throws IncorrectMessageException{
 		String content=message.getText();
 		if(content!=null && !content.contains("&")){
@@ -112,14 +112,13 @@ public class MessageProccesor implements Runnable {
 			throw new IncorrectMessageException("The Login message is not correct: '"+content.toString()+"'");
 		}
 	}
-	private void establishConnectionTreatment(){
-		User to=message.getTo();
-		if(to!=null){
-			String response=new Integer(Message.SERVER_MESSAGE_INVITATTION).toString()+this.message.getFrom().getNick();
+	private void crossMessagesTreatment(){
+		String response=message.getSimpleResponse();
+		if(response!=null){
 			this.sendDatagram(this.message.getTo(), response);
 		}else{
 			//User disconnected
-			String response=new Integer(Message.ERROR_MESSAGE_USER_IS_DISCONNECTED).toString()+this.userList.toString();
+			response=new Integer(Message.ERROR_MESSAGE_USER_IS_DISCONNECTED).toString()+this.userList.toString();
 			this.sendDatagram(this.message.getFrom(), response);
 		}
 	}
