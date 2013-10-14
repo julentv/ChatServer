@@ -45,5 +45,14 @@ public class UserList {
 		}
 		return listOfNicks;
 	}
+	public boolean deleteByIp(String ip){
+		for(User u:listOfUsers){
+			if (u.getIp().equals(ip)){
+				listOfUsers.remove(u);
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

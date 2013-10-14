@@ -1,6 +1,5 @@
 package es.deusto.ingenieria.ssdd.chat.data;
 
-import java.net.DatagramPacket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -135,8 +134,6 @@ public class Message {
 					}else{
 						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString();
 					}
-					
-					
 				}
 			}
 		}

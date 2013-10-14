@@ -81,13 +81,16 @@ public class MessageProccesor implements Runnable {
 	 */
 	private void treatMessage() throws IncorrectMessageException{
 		if(message.isCrossMessage()){
-			
+			crossMessagesTreatment();
 		}else{
-		switch (message.getMessageType()){
-			case Message.CLIENT_MESSAGE_LOGIN:
-				this.loginMessageTreatment();
-				break;
-			default: throw new IncorrectMessageException("The message type code does not exist");
+			switch (message.getMessageType()){
+				case Message.CLIENT_MESSAGE_LOGIN:
+					this.loginMessageTreatment();
+					break;
+				case Message.CLIENT_MESSAGE_CLOSE_CONNECTION:
+					
+					break;
+				default: throw new IncorrectMessageException("The message type code does not exist");
 			}
 		}
 	}
