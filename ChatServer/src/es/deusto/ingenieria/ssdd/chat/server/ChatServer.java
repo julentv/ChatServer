@@ -25,7 +25,7 @@ public class ChatServer {
 			DatagramPacket request = null;
 			byte[] buffer = new byte[1024];
 			
-			System.out.println(" - Server started '" + 
+			System.out.println("________ Server started '" + 
 			                       udpSocket.getLocalAddress().getHostAddress() + ":" + 
 					               port + "' ...");
 			
@@ -34,6 +34,9 @@ public class ChatServer {
 				udpSocket.receive(request);
 				System.out.println(" - Received a request from '" + request.getAddress().getHostAddress() + ":" + request.getPort() + 
 		                   "' -> " + new String(request.getData()));
+				MessageProccesor procesor= new MessageProccesor(request, userList);
+				procesor.start();
+				
 				//procesar el mensaje en nuevo hilo con Message Processor
 			}
 			

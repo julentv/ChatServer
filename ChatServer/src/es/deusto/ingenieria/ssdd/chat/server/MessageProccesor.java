@@ -7,7 +7,7 @@ import es.deusto.ingenieria.ssdd.chat.data.Message;
 import es.deusto.ingenieria.ssdd.chat.data.User;
 import es.deusto.ingenieria.ssdd.chat.exceptions.IncorrectMessageException;
 
-public class MessageProccesor implements Runnable {
+public class MessageProccesor extends Thread {
 
 	private DatagramPacket messageToProcces;
 	private UserList userList;
@@ -81,14 +81,21 @@ public class MessageProccesor implements Runnable {
 	 */
 	private void treatMessage() throws IncorrectMessageException{
 		if(message.isCrossMessage()){
+			//todos los cross messages
 			crossMessagesTreatment();
 		}else{
 			switch (message.getMessageType()){
 				case Message.CLIENT_MESSAGE_LOGIN:
+					//mensaje de login
 					this.loginMessageTreatment();
 					break;
 				case Message.CLIENT_MESSAGE_CLOSE_CONNECTION:
-					
+					//cerrar conexion de un usuario
+					this.closeConnectionTreatment();
+					break;
+				case Message.CLIENT_MESSAGE_GET_USERS:
+					//devolver lista
+					this.getConnectedUsersTreatment();
 					break;
 				default: throw new IncorrectMessageException("The message type code does not exist");
 			}
@@ -97,7 +104,6 @@ public class MessageProccesor implements Runnable {
 	
 	
 	//Methods for the treatment of the different message types
-
 	private void loginMessageTreatment() throws IncorrectMessageException{
 		String content=message.getText();
 		if(content!=null && !content.contains("&")){
@@ -124,6 +130,17 @@ public class MessageProccesor implements Runnable {
 			response=new Integer(Message.ERROR_MESSAGE_USER_IS_DISCONNECTED).toString()+this.userList.toString();
 			this.sendDatagram(this.message.getFrom(), response);
 		}
+	}
+	private void closeConnectionTreatment() throws IncorrectMessageException{
+		if(this.userList.deleteByIp(this.message.getFrom().getIp())){
+			sendDatagram(this.message.getFrom(), new Integer(Message.SERVER_MESSAGE_DISCONNECTED).toString());
+		}else{
+			throw new IncorrectMessageException("The user to disconect is not connected");
+		}
+	}
+	private void getConnectedUsersTreatment(){
+		String listOfUsers=this.userList.toString();
+		sendDatagram(message.getFrom(),listOfUsers);
 	}
 	private void sendDatagram(User destinationUser, String message){
 		//Que este controle lo de la longitud!!!!!
