@@ -48,12 +48,6 @@ public class ChatServer {
 			e.printStackTrace();
 		}
 	}
-	public  void proccesMessage(DatagramPacket datagram){
-		
-	}
-	public void sendDatagram(String message){
-		
-	}
 
 
 }

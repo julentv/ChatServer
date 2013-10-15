@@ -3,9 +3,10 @@ package es.deusto.ingenieria.ssdd.chat.data;
 public class User {	
 	private String nick;
 	private String ip;
-	private String port;
+	private int port;
 	
-	public User(String nick, String ip, String port){
+	public User(){};
+	public User(String nick, String ip, int port){
 		this.nick=nick;
 		this.ip=ip;
 		this.port=port;
@@ -15,7 +16,7 @@ public class User {
 		return ip;
 	}
 
-	public String getPort() {
+	public int getPort() {
 		return port;
 	}
 

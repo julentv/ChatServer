@@ -1,6 +1,11 @@
 package es.deusto.ingenieria.ssdd.chat.server;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import es.deusto.ingenieria.ssdd.chat.data.Message;
@@ -9,6 +14,7 @@ import es.deusto.ingenieria.ssdd.chat.exceptions.IncorrectMessageException;
 
 public class MessageProccesor extends Thread {
 
+	private static final int MESSAGE_MAX_LENGTH=1024;
 	private DatagramPacket messageToProcces;
 	private UserList userList;
 	private Message message;
@@ -102,7 +108,6 @@ public class MessageProccesor extends Thread {
 		}
 	}
 	
-	
 	//Methods for the treatment of the different message types
 	private void loginMessageTreatment() throws IncorrectMessageException{
 		String content=message.getText();
@@ -142,8 +147,68 @@ public class MessageProccesor extends Thread {
 		String listOfUsers=this.userList.toString();
 		sendDatagram(message.getFrom(),listOfUsers);
 	}
+	
+	
+	//Envio de los datagramas
 	private void sendDatagram(User destinationUser, String message){
-		//Que este controle lo de la longitud!!!!!
+		ArrayList<byte[]> messages=this.divideMessage(message);
+		DatagramSocket udpSocket;
+		try {
+			udpSocket = new DatagramSocket();
+			InetAddress serverHost = InetAddress.getByName(destinationUser.getIp());	
+			for(byte[] bytesToSend:messages){
+				DatagramPacket request = new DatagramPacket(bytesToSend, bytesToSend.length, serverHost, destinationUser.getPort());
+				udpSocket.send(request);
+			}
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+	}
+	private ArrayList<byte[]> divideMessage (String completeMessage){
+		ArrayList<byte[]> aMessages = new ArrayList<byte[]>();
+		int numberOfMessages = calculateNumberOfMessages(completeMessage);
+		if(numberOfMessages==1){
+			aMessages.add(completeMessage.getBytes());
+		}else{
+			String messageType = completeMessage.split("&")[0];
+			String messageText = completeMessage.substring(messageType.length());
+			int a= messageText.length()/numberOfMessages;
+			String message;
+			for (int i=0; i<numberOfMessages;i++){
+				message= messageText.substring(a*i, a*(i+1));
+				if(i!=numberOfMessages){
+					message=messageType.concat("&").concat(message.concat("&"));
+					aMessages.add(message.getBytes());
+				}else{
+					message=messageType.concat("&").concat(message);
+					aMessages.add(message.getBytes());
+				}
+			}
+		}
+		return aMessages;		
+	}
+	private int calculateNumberOfMessages (String message){
+		int numberOfMessages=1;
+		String[] messageFields = message.split("&");
+		int bytesToRest = messageFields[0].getBytes().length +"&&".getBytes().length;
+		int messageLength = message.substring(messageFields[0].length()).length();
+		if (messageLength > MESSAGE_MAX_LENGTH - bytesToRest){
+			
+			numberOfMessages=messageLength / (MESSAGE_MAX_LENGTH - bytesToRest);
+			
+			if (messageLength % (MESSAGE_MAX_LENGTH - bytesToRest) != 0)
+			{						
+				numberOfMessages++;
+			}
+		}
+		return numberOfMessages;
 	}
 }
