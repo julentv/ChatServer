@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.ArrayList;
-
-import es.deusto.ingenieria.ssdd.chat.data.User;
 
 
 public class ChatServer {
@@ -35,9 +32,9 @@ public class ChatServer {
 				System.out.println(" - Received a request from '" + request.getAddress().getHostAddress() + ":" + request.getPort() + 
 		                   "' -> " + new String(request.getData()));
 				MessageProccesor procesor= new MessageProccesor(request, userList);
-				procesor.start();
 				
-				//procesar el mensaje en nuevo hilo con Message Processor
+				//procesar el mensaje en nuevo hilo con MessageProcessor
+				procesor.start();
 			}
 			
 		} catch (SocketException e) {

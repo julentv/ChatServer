@@ -54,5 +54,8 @@ public class UserList {
 		}
 		return false;
 	}
+	public void add(User u){
+		this.listOfUsers.add(u);
+	}
 
 }

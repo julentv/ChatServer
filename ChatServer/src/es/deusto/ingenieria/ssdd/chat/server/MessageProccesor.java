@@ -110,7 +110,7 @@ public class MessageProccesor extends Thread {
 	
 	//Methods for the treatment of the different message types
 	private void loginMessageTreatment() throws IncorrectMessageException{
-		String content=message.getText();
+		String content=message.getText().trim();
 		if(content!=null && !content.contains("&")){
 			if(this.userList.getUserByNick(content)!=null){
 				//The nick already exist (send 301)
@@ -118,9 +118,11 @@ public class MessageProccesor extends Thread {
 				sendDatagram(message.getFrom(),response);
 				//Comprobamos el nick pero, ¿Y si ya hay un usuario en esa IP???
 			}else{
-				//Everithing correct, send ACK
+				//Everything correct, send ACK
+				User newUser=new User(content,this.messageToProcces.getAddress().getHostAddress(),this.messageToProcces.getPort());
+				userList.add(newUser);
 				String response=new Integer(Message.SERVER_MESSAGE_CONNECTED).toString()+this.userList.toString();
-				sendDatagram(message.getFrom(),response);
+				sendDatagram(newUser,response);
 			}
 		}else{
 			throw new IncorrectMessageException("The Login message is not correct: '"+content.toString()+"'");
@@ -159,6 +161,7 @@ public class MessageProccesor extends Thread {
 			for(byte[] bytesToSend:messages){
 				DatagramPacket request = new DatagramPacket(bytesToSend, bytesToSend.length, serverHost, destinationUser.getPort());
 				udpSocket.send(request);
+				System.out.println("Mensaje enviado a: "+destinationUser);
 			}
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
@@ -175,15 +178,18 @@ public class MessageProccesor extends Thread {
 	private ArrayList<byte[]> divideMessage (String completeMessage){
 		ArrayList<byte[]> aMessages = new ArrayList<byte[]>();
 		int numberOfMessages = calculateNumberOfMessages(completeMessage);
+		System.out.println(numberOfMessages);
 		if(numberOfMessages==1){
 			aMessages.add(completeMessage.getBytes());
+			System.out.println("a enviar: "+completeMessage);
 		}else{
 			String messageType = completeMessage.split("&")[0];
-			String messageText = completeMessage.substring(messageType.length());
+			String messageText = completeMessage.substring(messageType.length()+1);
 			int a= messageText.length()/numberOfMessages;
 			String message;
 			for (int i=0; i<numberOfMessages;i++){
 				message= messageText.substring(a*i, a*(i+1));
+				
 				if(i!=numberOfMessages){
 					message=messageType.concat("&").concat(message.concat("&"));
 					aMessages.add(message.getBytes());
@@ -191,6 +197,7 @@ public class MessageProccesor extends Thread {
 					message=messageType.concat("&").concat(message);
 					aMessages.add(message.getBytes());
 				}
+				System.out.println("a enviar: "+message);
 			}
 		}
 		return aMessages;		
@@ -199,7 +206,10 @@ public class MessageProccesor extends Thread {
 		int numberOfMessages=1;
 		String[] messageFields = message.split("&");
 		int bytesToRest = messageFields[0].getBytes().length +"&&".getBytes().length;
-		int messageLength = message.substring(messageFields[0].length()).length();
+		int messageFieldsLength=messageFields[0].length()+1;
+		String substring=message.substring(messageFieldsLength);
+		int messageLength = substring.length();
+		
 		if (messageLength > MESSAGE_MAX_LENGTH - bytesToRest){
 			
 			numberOfMessages=messageLength / (MESSAGE_MAX_LENGTH - bytesToRest);
