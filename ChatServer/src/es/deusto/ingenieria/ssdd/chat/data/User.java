@@ -36,7 +36,7 @@ public class User {
 		}
 	}
 	public String toString(){
-		return "Nick: "+this.nick+"/ IP: "+this.ip;
+		return "Nick: "+this.nick+"/ IP: "+this.ip+"/ Puerto:"+this.port;
 		
 	}
 }
