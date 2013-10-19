@@ -125,6 +125,17 @@ public class Message {
 	 */
 	public String getSimpleResponse(){
 		if(this.to!=null){
+			for (int i=0, ii=Message.CROSS_MESSAGES.length;i<ii;i++){
+				if(Message.CROSS_MESSAGES[i]==this.messageType){
+					if(this.messageType==Message.CLIENT_MESSAGE_ESTABLISH_CONNECTION){
+						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick();
+					}else if(this.messageType==Message.CLIENT_MESSAGE){
+						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick()+'&'+this.text;
+					}else{
+						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString();
+					}
+				}
+			}
 			for(int i:Message.CROSS_MESSAGES){
 				if(i==this.messageType){
 					if(i==Message.CROSS_MESSAGES[0]){

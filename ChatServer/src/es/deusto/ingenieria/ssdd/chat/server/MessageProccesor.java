@@ -53,6 +53,7 @@ public class MessageProccesor extends Thread {
 		User userFrom=userList.getUserByIpAndPort(ip, port);
 		User userTo=null;
 		String content=new String(messageToProcces.getData());
+		content=content.trim();
 		int id=Integer.parseInt(content.substring(0, 3));
 		if(content.length()>4){
 			//also eliminate the first &

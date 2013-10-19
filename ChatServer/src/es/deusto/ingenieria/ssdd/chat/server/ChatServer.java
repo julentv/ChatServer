@@ -20,13 +20,12 @@ public class ChatServer {
 		try {
 			DatagramSocket udpSocket = new DatagramSocket(this.port);
 			DatagramPacket request = null;
-			byte[] buffer = new byte[1024];
-			
 			System.out.println("________ Server started '" + 
 			                       udpSocket.getLocalAddress().getHostAddress() + ":" + 
 					               port + "' ...");
 			
 			while(true){
+				byte[] buffer = new byte[1024];
 				request = new DatagramPacket(buffer, buffer.length);
 				udpSocket.receive(request);
 				System.out.println(" - Received a request from '" + request.getAddress().getHostAddress() + ":" + request.getPort() + 
