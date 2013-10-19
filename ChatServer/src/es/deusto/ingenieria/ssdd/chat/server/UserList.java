@@ -15,9 +15,9 @@ public class UserList {
 	 * @param ip
 	 * @return the user if exists null if not.
 	 */
-	public User getUserByIp (String ip){
+	public User getUserByIpAndPort (String ip, int port){
 		for(User u:listOfUsers){
-			if(u.getIp().equals(ip)) return u;
+			if(u.getIp().equals(ip)&&u.getPort()==port) return u;
 		}
 		return null;
 	}
@@ -35,7 +35,7 @@ public class UserList {
 	}
 	
 	/**
-	 * Format of the string: &nick0&nick1&..nickn
+	 * Format of the string: &nick0&nick1&...nickn
 	 * returns empty string if there are not Users in the list
 	 */
 	public String toString (){

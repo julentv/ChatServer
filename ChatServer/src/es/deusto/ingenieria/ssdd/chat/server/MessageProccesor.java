@@ -49,8 +49,9 @@ public class MessageProccesor extends Thread {
 		
 		//obtain all the params from the datagram data
 		String ip=messageToProcces.getAddress().getHostAddress();
-		User userFrom=userList.getUserByIp(ip);
-		User userTo=userList.getUserByIp(ip);
+		int port=messageToProcces.getPort();
+		User userFrom=userList.getUserByIpAndPort(ip, port);
+		User userTo=null;
 		String content=new String(messageToProcces.getData());
 		int id=Integer.parseInt(content.substring(0, 3));
 		if(content.length()>4){
@@ -115,7 +116,7 @@ public class MessageProccesor extends Thread {
 			if(this.userList.getUserByNick(content)!=null){
 				//The nick already exist (send 301)
 				String response=new Integer(Message.ERROR_MESSAGE_EXISTING_NICK).toString();
-				sendDatagram(message.getFrom(),response);
+				sendDatagram(new User(null,messageToProcces.getAddress().getHostAddress(), this.messageToProcces.getPort()),response);
 				//Comprobamos el nick pero, ¿Y si ya hay un usuario en esa IP???
 			}else{
 				//Everything correct, send ACK
@@ -147,7 +148,7 @@ public class MessageProccesor extends Thread {
 	}
 	private void getConnectedUsersTreatment(){
 		String listOfUsers=this.userList.toString();
-		sendDatagram(message.getFrom(),listOfUsers);
+		sendDatagram(message.getFrom(),"207"+listOfUsers);
 	}
 	
 	
@@ -202,23 +203,28 @@ public class MessageProccesor extends Thread {
 		}
 		return aMessages;		
 	}
-	private int calculateNumberOfMessages (String message){
+	private int calculateNumberOfMessages(String message){
 		int numberOfMessages=1;
 		String[] messageFields = message.split("&");
 		int bytesToRest = messageFields[0].getBytes().length +"&&".getBytes().length;
 		int messageFieldsLength=messageFields[0].length()+1;
-		String substring=message.substring(messageFieldsLength);
-		int messageLength = substring.length();
-		
-		if (messageLength > MESSAGE_MAX_LENGTH - bytesToRest){
+		try{
+			String substring=message.substring(messageFieldsLength);
+			int messageLength = substring.length();
 			
-			numberOfMessages=messageLength / (MESSAGE_MAX_LENGTH - bytesToRest);
-			
-			if (messageLength % (MESSAGE_MAX_LENGTH - bytesToRest) != 0)
-			{						
-				numberOfMessages++;
+			if (messageLength > MESSAGE_MAX_LENGTH - bytesToRest){
+				
+				numberOfMessages=messageLength / (MESSAGE_MAX_LENGTH - bytesToRest);
+				
+				if (messageLength % (MESSAGE_MAX_LENGTH - bytesToRest) != 0)
+				{						
+					numberOfMessages++;
+				}
 			}
+		}catch(StringIndexOutOfBoundsException e){
+			
 		}
+		
 		return numberOfMessages;
 	}
 }
