@@ -141,7 +141,7 @@ public class MessageProccesor extends Thread {
 		}
 	}
 	private void closeConnectionTreatment() throws IncorrectMessageException{
-		if(this.userList.deleteByIp(this.message.getFrom().getIp())){
+		if(this.userList.deleteByIpAndPort(this.message.getFrom().getIp(), this.message.getFrom().getPort())){
 			sendDatagram(this.message.getFrom(), new Integer(Message.SERVER_MESSAGE_DISCONNECTED).toString());
 		}else{
 			throw new IncorrectMessageException("The user to disconect is not connected");

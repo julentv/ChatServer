@@ -45,9 +45,9 @@ public class UserList {
 		}
 		return listOfNicks;
 	}
-	public boolean deleteByIp(String ip){
+	public boolean deleteByIpAndPort(String ip, int port){
 		for(User u:listOfUsers){
-			if (u.getIp().equals(ip)){
+			if (u.getIp().equals(ip)&&u.getPort()==port){
 				listOfUsers.remove(u);
 				return true;
 			}
