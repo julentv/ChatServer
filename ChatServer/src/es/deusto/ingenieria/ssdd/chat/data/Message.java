@@ -136,17 +136,6 @@ public class Message {
 					}
 				}
 			}
-			for(int i:Message.CROSS_MESSAGES){
-				if(i==this.messageType){
-					if(i==Message.CROSS_MESSAGES[0]){
-						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick();
-					}else if(i==Message.CLIENT_MESSAGE){
-						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick()+'&'+this.text;
-					}else{
-						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString();
-					}
-				}
-			}
 		}
 		return null;
 	}
