@@ -103,9 +103,7 @@ public class Message {
 				
 	}
 	public static boolean hasDestination(int code){
-		if(code==Message.CLIENT_MESSAGE){
-			return true;
-		}
+		
 		for(int i:Message.CROSS_MESSAGES){
 			if(i==code)return true;
 		}
@@ -130,6 +128,7 @@ public class Message {
 					if(this.messageType==Message.CLIENT_MESSAGE_ESTABLISH_CONNECTION){
 						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick();
 					}else if(this.messageType==Message.CLIENT_MESSAGE){
+						System.out.println("Client message: "+Message.RESPONSES_TO_CROSS_MESSAGES[i]+"&"+this.text);
 						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString()+'&'+this.from.getNick()+'&'+this.text;
 					}else{
 						return new Integer(Message.RESPONSES_TO_CROSS_MESSAGES[i]).toString();
